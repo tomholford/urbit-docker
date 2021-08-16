@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+BRANCH="$1"
+: ${BRANCH:="master"}
+TAG="$2"
+: ${TAG:="latest"}
+
+
+if [ -z "$BRANCH" ]
+then
+	>&2 echo "Usage: $(basename $0) [branch (default 'master')] [tag (default 'latest')]"
+	exit 1
+fi
+
+docker build --build-arg branch=${BRANCH} -f Dockerfile -t urbit:${TAG} .

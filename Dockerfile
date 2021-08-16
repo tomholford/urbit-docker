@@ -1,13 +1,13 @@
 FROM nixos/nix:latest as builder
 
-ARG branch
+ARG branch=master
 RUN nix-env -iA nixpkgs.git
 RUN nix-env -iA nixpkgs.git-lfs
 
 RUN nix-env -iA cachix -f https://cachix.org/api/v1/install
 RUN cachix use ares
 
-RUN git clone --branch ${branch} --depth 1 https://github.com/urbit/urbit.git /tmp/urbit
+RUN git clone  https://github.com/urbit/urbit.git --branch ${branch} --single-branch /tmp/urbit
 
 WORKDIR /tmp/urbit
 
@@ -21,7 +21,6 @@ RUN nix-build docker.nix --show-trace
 RUN mkdir /image /output
 RUN tar xzf result -C /image
 RUN tar xf /image/*/layer.tar -C /output
-
 
 # create minimal image
 FROM busybox
